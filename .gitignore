@@ -1,0 +1,5 @@
+.chalice/deployments/
+.chalice/deployed/
+.chalice/venv/
+.chalice/config.json
+chalicelib/private.key

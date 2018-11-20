@@ -1,0 +1,17 @@
+{
+  "stages": {
+    "dev": {
+      "api_gateway_stage": "api",
+      "environment_variables": {
+              "APPLICATION_ID": "xxx",
+              "API_KEY" : "xxx",
+              "API_SECRET" : "xxx",
+              "NAME" : "Joe Bloggs",
+              "NUMBER" : "447700900123",
+              "NEXMO_NUMBER" : "447700900456"
+            }
+    }
+  },
+  "version": "2.0",
+  "app_name": "paging-service"
+}
