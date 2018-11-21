@@ -3,3 +3,4 @@
 .chalice/venv/
 .chalice/config.json
 chalicelib/private.key
+*.pyc
