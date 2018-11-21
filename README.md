@@ -5,7 +5,7 @@ Have the AWS CLI tool and Chalice installed and configured on your machine
 A Nexmo account with the nexmo cli tool installed and configured
 Have a Nexmo phone number purchased on your account
 
-##Setup
+## Setup
 Before we implement our functionality we need to do some setup, we need to create a new voice application either within the nexmo dashboard or using the command line tool”
 
 ` nexmo app:create “Paging Service” http://example.com/answer http://example.com/event --keyfile proivate.key`
@@ -17,7 +17,7 @@ We also need to create an S3 bucket in which to place the recordings for transcr
 
 ` aws s3api create-bucket  --bucket pagingservice --region us-east-1`
 
-##Download and configure
+## Download and configure
 
 Clone the repository:
 
@@ -57,7 +57,7 @@ NUMBER is your mobile number where the SMS messages will be sent to
 NEXMO_NUMBER is the number that will be used to send the messages from.
 
 
-##Deploy
+## Deploy
 From the base of the project folder type
 ` chalice deploy`
 
