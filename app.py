@@ -1,7 +1,6 @@
 from chalice import Chalice
 import boto3
 import nexmo
-import json
 import os
 
 APPLICATION_ID = os.environ['APPLICATION_ID']
@@ -10,16 +9,15 @@ API_SECRET = os.environ['API_SECRET']
 NAME = os.environ['NAME']
 NUMBER = os.environ['NUMBER']
 NEXMO_NUMBER = os.environ['NEXMO_NUMBER']
+S3_BUCKET = 'pagingdemo'
 
 
 app = Chalice(app_name='paging-service')
-app.debug=True
+app.debug=False
 
-S3_BUCKET = 'pagingservice'
 S3 = boto3.client('s3')
 TRANSCRIBE = boto3.client('transcribe')
-
-client = nexmo.Client(
+NEXMO = nexmo.Client(
     key=API_KEY,
     secret=API_SECRET,
     application_id=APPLICATION_ID,
@@ -32,7 +30,7 @@ def answer():
     ncco =[
             {
                 'action': 'talk',
-                'text': "Welcome to {}s messaging service, please leave a short message after the tone".format(NAME),
+                'text': "Welcome to {} messaging service, please leave a short message after the tone".format(NAME),
             },
             {
                 'action': 'record',
@@ -54,8 +52,7 @@ def answer():
 def recording():
   qparams=  app.current_request.query_params
   data =  app.current_request.json_body
-  print(data)
-  recfile = client.get_recording(data['recording_url'])  
+  recfile = NEXMO.get_recording(data['recording_url'])  
   S3.put_object(
       Bucket=S3_BUCKET,
       Key=data['conversation_uuid']+".mp3",
@@ -81,7 +78,6 @@ def recording():
 
 @app.on_s3_event(bucket=S3_BUCKET, events=['s3:ObjectCreated:*'], suffix='.json')
 def transcribed(event):
-  print(event)
   obj = S3.get_object( Bucket=S3_BUCKET, Key=event.key)
   data = json.loads(obj['Body'].read())
   S3.put_object_acl(ACL='public-read', Bucket=S3_BUCKET, Key= data['jobName']+".mp3")
@@ -90,7 +86,7 @@ def transcribed(event):
   callerid = obj['ResponseMetadata']['HTTPHeaders']['x-amz-meta-callerid']
   url = 'https://s3.amazonaws.com/{}/{}'.format(S3_BUCKET, data['jobName']+".mp3")
   message = "[From: +{}]\n\n{}\n\n{}".format(callerid, text, url)
-  client.send_message({'from': NEXMO_NUMBER, 'to': NUMBER, 'text': message})
+  NEXMO.send_message({'from': NEXMO_NUMBER, 'to': NUMBER, 'text': message})
     
             
 
