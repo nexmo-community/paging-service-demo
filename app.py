@@ -2,6 +2,7 @@ from chalice import Chalice
 import boto3
 import nexmo
 import os
+import json
 
 APPLICATION_ID = os.environ['APPLICATION_ID']
 API_KEY = os.environ['API_KEY']
